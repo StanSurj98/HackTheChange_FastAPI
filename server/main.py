@@ -9,8 +9,24 @@ async def get_body(request: Request):
     payload = req_body["response"]
     result = query(payload)
     required_response = result["choices"]
-    #required_response2 = required_response["text"].replace("\n\n", "")
-    
-    print(required_response[0]["text"])
 
-    return required_response
+    # Parsing the "text" string from OpenAI
+    text = required_response[0]["text"].replace("\n\n", "")
+    list = text.split("|")
+    list_stripped = [item.strip() for item in list]
+
+    # Creating JSON object for Express API server
+    description = {
+        "method": list_stripped[0],
+        "feeling": list_stripped[1],
+        "sentiment": list_stripped[2], 
+        "reason": list_stripped[3], 
+    }
+
+    json_result = { 
+        "pollId": req_body["pollId"], 
+        "userId": req_body["userId"], 
+        "response": req_body["response"], 
+        "description": description 
+    }
+    return json_result
