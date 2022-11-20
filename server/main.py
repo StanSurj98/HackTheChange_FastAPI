@@ -1,3 +1,4 @@
+import requests
 from fastapi import Request, FastAPI
 from  helpers import *
 app = FastAPI()
@@ -29,4 +30,6 @@ async def get_body(request: Request):
         "response": req_body["response"], 
         "description": description 
     }
+    print(json_result)
+    requests.post("http://localhost:3000/api/responses", json = json_result)
     return json_result
