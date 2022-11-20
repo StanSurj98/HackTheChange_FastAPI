@@ -1,10 +1,16 @@
-from fastapi import FastAPI
+from fastapi import Request, FastAPI
 from  helpers import *
 app = FastAPI()
 
-@app.get("/")
-async def root():
-    payload = "Today I enjoyed using blocks in math class because it made a lot of sense. Math on the white board is boring because I can't see"
+@app.post("/{userId}/polls/{pollId}")
+async def get_body(request: Request):
+    print("Line12 main.py")
+    req_body = await request.json()
+    payload = req_body["response"]
     result = query(payload)
     required_response = result["choices"]
+    #required_response2 = required_response["text"].replace("\n\n", "")
+    
+    print(required_response[0]["text"])
+
     return required_response
